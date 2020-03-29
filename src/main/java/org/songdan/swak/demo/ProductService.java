@@ -1,8 +1,7 @@
-package org.songdan.spring.swak.demo;
+package org.songdan.swak.demo;
 
-import org.songdan.spring.swak.annotations.SwakSessionAop;
+import org.songdan.swak.annotations.SwakSessionAop;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**

@@ -1,10 +1,10 @@
-package org.songdan.spring.swak.core.aop;
+package org.songdan.swak.core.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.songdan.spring.swak.core.SwakSession;
+import org.songdan.swak.core.SwakSession;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SwakSessionAspect {
 
-    @Pointcut("@annotation(org.songdan.spring.swak.annotations.SwakSessionAop)")
+    @Pointcut("@annotation(org.songdan.swak.annotations.SwakSessionAop)")
     public void checkPoint() {
     }
 

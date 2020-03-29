@@ -1,26 +1,17 @@
-package org.songdan.spring.swak.core.spring;
+package org.songdan.swak.core.spring;
 
-import org.songdan.spring.swak.annotations.SwakInterface;
-import org.songdan.spring.swak.annotations.SwakTag;
-import org.songdan.spring.swak.core.SwakSession;
+import org.songdan.swak.annotations.SwakInterface;
+import org.songdan.swak.annotations.SwakTag;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**

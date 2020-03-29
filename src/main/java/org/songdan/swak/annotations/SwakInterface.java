@@ -1,4 +1,4 @@
-package org.songdan.spring.swak.annotations;
+package org.songdan.swak.annotations;
 
 import java.lang.annotation.*;
 

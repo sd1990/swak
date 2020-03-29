@@ -1,6 +1,6 @@
-package org.songdan.spring.swak.demo;
+package org.songdan.swak.demo;
 
-import org.songdan.spring.swak.annotations.SwakTag;
+import org.songdan.swak.annotations.SwakTag;
 import org.springframework.stereotype.Component;
 
 /**

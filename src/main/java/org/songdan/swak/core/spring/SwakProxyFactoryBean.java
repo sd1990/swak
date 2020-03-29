@@ -1,8 +1,8 @@
-package org.songdan.spring.swak.core.spring;
+package org.songdan.swak.core.spring;
 
-import org.songdan.spring.swak.annotations.SwakMethod;
-import org.songdan.spring.swak.annotations.SwakTag;
-import org.songdan.spring.swak.core.SwakSession;
+import org.songdan.swak.annotations.SwakMethod;
+import org.songdan.swak.annotations.SwakTag;
+import org.songdan.swak.core.SwakSession;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;

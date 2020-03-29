@@ -1,4 +1,4 @@
-package org.songdan.spring.swak.core;
+package org.songdan.swak.core;
 
 import java.util.LinkedHashSet;
 import java.util.List;
