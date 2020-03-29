@@ -72,6 +72,7 @@ public class SwakBeanFactoryPostProcessor implements BeanDefinitionRegistryPostP
         for (Map.Entry<Class, List<BeanDefinition>> entry : map.entrySet()) {
             GenericBeanDefinition definition = new GenericBeanDefinition();
             definition.setBeanClass(SwakProxyFactoryBean.class);
+            definition.setPrimary(true);
             definition.getPropertyValues().add("proxyClass", entry.getKey().getName());
             List<String> beanNameList = entry.getValue().stream().map(beanDefinitionMap::get).collect(Collectors.toList());
             definition.getPropertyValues().add("instancesList", beanNameList);
