@@ -23,6 +23,7 @@ public class SwakSessionAspect {
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         SwakSession.putTag("moneyTag");
         SwakSession.putTag("activityTag");
+        SwakSession.setGroup("firstGroup");
         try {
             return joinPoint.proceed();
         }finally {

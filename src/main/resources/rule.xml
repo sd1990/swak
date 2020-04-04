@@ -1,0 +1,16 @@
+<groups>
+    <group name="firstGroup">
+        <tags>
+            <tag>moneyTag</tag>
+            <tag>activityTag</tag>
+        </tags>
+        <conflicts>
+            <conflict>
+                <className>org.songdan.swak.demo.TitleService</className>
+                <method>fetchTitle</method>
+                <reducer>toStringJoiner</reducer>
+                <sequence>activityTag,moneyTag</sequence>
+            </conflict>
+        </conflicts>
+    </group>
+</groups>

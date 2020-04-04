@@ -17,12 +17,28 @@ public class SwakSession {
      */
     private static ThreadLocal<Set<String>> tagListTl = ThreadLocal.withInitial(LinkedHashSet::new);
 
+    private static ThreadLocal<String> groupTl = new ThreadLocal<>();
+
+
+
     public static boolean putTag(String tag) {
         return tagListTl.get().add(tag);
     }
 
     public static Set<String> getTags() {
         return tagListTl.get();
+    }
+
+    public static String getGroupName() {
+        return groupTl.get();
+    }
+
+    public static void setGroup(String groupName) {
+        groupTl.set(groupName);
+    }
+
+    public static void clearGroup() {
+        groupTl.remove();
     }
 
     public static void clearTags() {

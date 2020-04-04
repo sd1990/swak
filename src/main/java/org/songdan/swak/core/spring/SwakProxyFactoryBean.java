@@ -3,6 +3,9 @@ package org.songdan.swak.core.spring;
 import org.songdan.swak.annotations.SwakMethod;
 import org.songdan.swak.annotations.SwakTag;
 import org.songdan.swak.core.SwakSession;
+import org.songdan.swak.rule.Conflict;
+import org.songdan.swak.rule.RuleGroup;
+import org.songdan.swak.rule.RuleGroupRegistry;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -10,9 +13,11 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 生成组合代理对象
@@ -30,6 +35,8 @@ public class SwakProxyFactoryBean<T> implements FactoryBean<T>, InitializingBean
 
     private BeanFactory beanFactory;
 
+    private RuleGroupRegistry ruleGroupRegistry;
+
     @Override
     public T getObject() throws Exception {
         return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{proxyClass}, new InvocationHandler() {
@@ -43,23 +50,37 @@ public class SwakProxyFactoryBean<T> implements FactoryBean<T>, InitializingBean
                 if (annotation == null) {
                     return method.invoke(instancesList.get(0), args);
                 }
-                Set<String> tags = SwakSession.getTags();
-                List<T> targetList = new ArrayList<>(instancesList.size());
-                for (String tag : tags) {
-                    T instance = instanceMap.get(tag);
-                    if (instance != null) {
-                        targetList.add(instance);
-                    }
+                Set<String> sessionTags = SwakSession.getTags();
+                if (sessionTags.size()==1) {
+                    T t = instanceMap.get(sessionTags.iterator().next());
+                    return method.invoke(t, args);
                 }
-                //获取编排的规则，对taglist进行编排
-                //需要对结果进行个性化处理，可以在配置里面配置处理的bean
-//                List<Object> resultList = new ArrayList<>();
-//                for (T t : targetList) {
-//                    Object result = method.invoke(targetList.get(targetList.size() - 1), args);
-//                    resultList.add(result);
-//                }
-//                return method.invoke(targetList.get(targetList.size()-1),args);
-                return method.invoke(targetList.get(targetList.size()-1), args);
+                String groupName = SwakSession.getGroupName();
+                RuleGroup group = ruleGroupRegistry.getGroup(groupName);
+                List<Conflict> conflictList = group.getConflictList();
+                Optional<Conflict> optional = conflictList.stream()
+                        .filter(conflict -> conflict.getSwakCls().equals(proxyClass))
+                        .filter(conflict -> conflict.getSwakMethod().equals(method))
+                        .findFirst();
+                if (optional.isPresent()) {
+                    Conflict conflict = optional.get();
+                    List<String> sequenceTags = conflict.getTags();
+                    List<Object> resultList = sequenceTags.stream()
+                            .filter(tag -> sessionTags.contains(tag))
+                            .map(tag -> instanceMap.get(tag))
+                            .filter(Objects::nonNull)
+                            .map(t -> {
+                                try {
+                                    return method.invoke(t, args);
+                                } catch (IllegalAccessException e) {
+                                    throw new IllegalStateException(e);
+                                } catch (InvocationTargetException e) {
+                                    throw new RuntimeException(e.getCause());
+                                }
+                            }).collect(Collectors.toList());
+                    return conflict.getReducer().reduce(resultList);
+                }
+                throw new IllegalStateException("swak配置出错");
             }
         });
     }
@@ -85,7 +106,7 @@ public class SwakProxyFactoryBean<T> implements FactoryBean<T>, InitializingBean
             }
         }
         this.instanceMap = instanceMap;
-
+        ruleGroupRegistry = beanFactory.getBean(RuleGroupRegistry.class);
     }
 
     public Class<T> getProxyClass() {
