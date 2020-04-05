@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 /**
@@ -65,19 +66,12 @@ public class SwakProxyFactoryBean<T> implements FactoryBean<T>, InitializingBean
                 if (optional.isPresent()) {
                     Conflict conflict = optional.get();
                     List<String> sequenceTags = conflict.getTags();
-                    List<Object> resultList = sequenceTags.stream()
+                    List<Callable<Object>> resultList = sequenceTags.stream()
                             .filter(tag -> sessionTags.contains(tag))
                             .map(tag -> instanceMap.get(tag))
                             .filter(Objects::nonNull)
-                            .map(t -> {
-                                try {
-                                    return method.invoke(t, args);
-                                } catch (IllegalAccessException e) {
-                                    throw new IllegalStateException(e);
-                                } catch (InvocationTargetException e) {
-                                    throw new RuntimeException(e.getCause());
-                                }
-                            }).collect(Collectors.toList());
+                            .map(t -> (Callable<Object>) () -> method.invoke(t, args))
+                            .collect(Collectors.toList());
                     return conflict.getReducer().reduce(resultList);
                 }
                 throw new IllegalStateException("swak配置出错");

@@ -2,8 +2,10 @@ package org.songdan.swak.ruduce;
 
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 
@@ -16,7 +18,17 @@ import java.util.function.Supplier;
 public class ToStringJoiner implements Reducer<String> {
 
     @Override
-    public String reduce(List<String> list) {
-        return list.stream().filter(Objects::nonNull).reduce((s, s2) -> s+","+s2).orElse("");
+    public String reduce(List<Callable<String>> list) {
+        return list.stream().filter(Objects::nonNull).map(call->{
+            try {
+                return call.call();
+            } catch (Exception e) {
+                if (e instanceof InvocationTargetException) {
+                    throw new RuntimeException(e.getCause());
+                } else {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).reduce((s, s2) -> s+","+s2).orElse("");
     }
 }

@@ -1,6 +1,7 @@
 package org.songdan.swak.rule;
 
 import org.songdan.swak.demo.TitleService;
+import org.songdan.swak.ruduce.FirstNotNull;
 import org.songdan.swak.ruduce.ToStringJoiner;
 import org.songdan.swak.rule.config.ConfigFamily;
 import org.songdan.swak.rule.config.Factory;
@@ -47,7 +48,7 @@ public class DefaultGroupParser implements GroupParser {
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
-        conflict.setReducer(new ToStringJoiner());
+        conflict.setReducer(new FirstNotNull());
         List<Conflict> conflicts = new ArrayList<>();
         conflicts.add(conflict);
         ruleGroup.setConflictList(conflicts);
