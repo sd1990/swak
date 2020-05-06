@@ -3,17 +3,10 @@ package org.songdan.swak.rule;
 import org.songdan.swak.demo.TitleService;
 import org.songdan.swak.ruduce.FirstNotNull;
 import org.songdan.swak.ruduce.ToStringJoiner;
-import org.songdan.swak.rule.config.ConfigFamily;
-import org.songdan.swak.rule.config.Factory;
-import org.songdan.swak.util.JaxbUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

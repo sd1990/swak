@@ -6,8 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
-import java.util.function.BinaryOperator;
-import java.util.function.Supplier;
 
 /**
  * 以字符串的形式拼接的reducer
